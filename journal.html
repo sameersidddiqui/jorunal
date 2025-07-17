@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Charge - Journal App</title>
+    <link rel="stylesheet" href="tc.css">
+</head>
+<body>
+    <style>
+        /* ===== Rich Journal Template ===== */
+:root {
+   --primary-color: #845df8;          /* Lavender Luxe */
+  --primary-hover: #7c5cc4;          /* Royal Violet */
+  --primary-light: rgba(167, 139, 250, 0.1); /* Lavender Haze */
+
+  --secondary-color: #d8b4fe;        /* Soft Lilac */
+  --accent-color: #f6c1d5;           /* Blush Petal */
+  --accent-hover: #e0a3bc;           /* Rose Mauve */
+
+  --light-color: #fdfaff;            /* Whisper White (with lilac tint) */
+  --dark-color: #3b3054;             /* Deep Eggplant */
+
+  --success-color: #b7e4c7;          /* Mint Whisper */
+  --warning-color: #ffe8a1;          /* Vanilla Cream */
+  --danger-color: #f4a5ae; 
+    
+    /* Typography */
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --font-heading: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Segoe UI', 'Helvetica Neue', system-ui, sans-serif;
+    --font-mono: 'SFMono-Regular', 'Menlo', monospace;
+    
+    /* Spacing & Sizing */
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --space-unit: 1rem;
+    --space-xs: calc(var(--space-unit) * 0.25);
+    --space-sm: calc(var(--space-unit) * 0.5);
+    --space-md: calc(var(--space-unit) * 1);
+    --space-lg: calc(var(--space-unit) * 1.5);
+    --space-xl: calc(var(--space-unit) * 2);
+    
+    /* Effects */
+    --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                   0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --focus-ring: 0 0 0 3px rgba(74, 111, 165, 0.3);
+    --transition-base: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Gradients */
+    --bg-gradient: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    --accent-gradient: linear-gradient(135deg, var(--accent-color) 0%, #ff9a5f 100%);
+}
+
+/* ===== Base Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    line-height: 1.6;
+    background-color: #f5f5f7;
+    background-image: var(--bg-gradient);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== App Container ===== */
+.app-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: var(--space-md);
+    min-height: 100vh;
+    background-color: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 2rem;
+    letter-spacing: -0.25px;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+p {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* ===== Header & Navigation ===== */
+header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+header h1 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-sm);
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+header h1::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--accent-gradient);
+    border-radius: 3px;
+}
+
+/* ===== Date Picker ===== */
+.date-picker {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+.date-input {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition-base);
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-body);
+    min-width: 200px;
+    text-align: center;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: var(--focus-ring);
+}
+
+/* ===== Buttons ===== */
+.btn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition-base);
+    box-shadow: var(--box-shadow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
+    pointer-events: none;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, #5b7c9e 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn-accent {
+    background: var(--accent-gradient);
+}
+
+.btn-accent:hover {
+    background: linear-gradient(135deg, var(--accent-hover) 0%, #e68a4f 100%);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-light);
+}
+
+/* ===== Tabs ===== */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    position: relative;
+    transition: var(--transition-base);
+    margin-bottom: -1px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.tab:hover {
+    color: var(--primary-color);
+    background: rgba(74, 111, 165, 0.05);
+}
+
+.tab.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 3px 3px 0 0;
+}
+
+/* ===== Journal Editor ===== */
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 65vh;
+    background-color: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-lg);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: var(--transition-slow);
+}
+
+.editor-container:focus-within {
+    box-shadow: 0 0 0 2px var(--primary-color), var(--box-shadow-lg);
+}
+
+#journal-entry {
+    flex-grow: 1;
+    padding: var(--space-lg);
+    border: none;
+    border-radius: var(--border-radius-lg);
+    resize: none;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background-color: #fff;
+    transition: var(--transition-base);
+}
+
+#journal-entry:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#journal-entry::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.editor-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--light-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.status-message {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    opacity: 0;
+    transition: var(--transition-base);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.status-message.show {
+    opacity: 1;
+}
+
+.autosave-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ===== Statistics Cards ===== */
+.stats-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-xs);
+}
+
+.stat-card {
+    background-color: white;
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition-slow);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-gradient);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.stat-card h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding-bottom: var(--space-sm);
+    position: relative;
+}
+
+.stat-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--primary-color);
+    opacity: 0.5;
+}
+
+.chart-container {
+    padding: var(--space-sm);
+}
+
+.chart {
+    height: 220px;
+    width: 100%;
+    position: relative;
+    margin-top: var(--space-md);
+}
+
+.chart-bar {
+    background: var(--primary-gradient);
+    margin-bottom: var(--space-sm);
+    border-radius: 4px;
+    color: white;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: width 1s ease, background-color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-bar:hover {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, #5b7c9e 100%);
+}
+
+.streak-display {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin: var(--space-md) 0;
+    text-align: center;
+    font-family: var(--font-heading);
+}
+
+.streak-label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: var(--space-md);
+}
+
+.stat-item {
+    margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.stat-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+.stat-value {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+.inactivity-warning {
+    background-color: var(--warning-color);
+    color: var(--dark-color);
+    padding: var(--space-md);
+    border-radius: var(--border-radius);
+    margin-top: var(--space-lg);
+    font-weight: 600;
+    text-align: center;
+    animation: pulse 2s infinite;
+    box-shadow: var(--box-shadow);
+}
+
+/* ===== Animations & Effects ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== Responsive Design ===== */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 768px;
+        padding: var(--space-lg);
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .chart {
+        height: 250px;
+    }
+    
+    #journal-entry {
+        font-size: 1.15rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 900px;
+        padding: var(--space-xl);
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .editor-container {
+        height: 70vh;
+    }
+}
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-primary: #f8f9fa;
+        --text-secondary: #dee2e6;
+        --text-muted: #adb5bd;
+        --light-color: #343a40;
+        --dark-color: #f8f9fa;
+        --bg-gradient: linear-gradient(135deg, #212529 0%, #343a40 100%);
+        --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        --box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.4);
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+                       0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    }
+    
+    body {
+        background-color: #212529;
+    }
+    
+    .app-container {
+        background-color: rgba(52, 58, 64, 0.94);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    
+    .editor-container,
+    .stat-card,
+    .date-input {
+        background-color: #495057;
+        border-color: #6c757d;
+    }
+    
+    #journal-entry {
+        background-color: #495057;
+        color: var(--text-primary);
+    }
+    
+    .editor-footer {
+        background-color: #343a40;
+        border-color: #495057;
+    }
+    
+    .tab {
+        color: var(--text-muted);
+    }
+    
+    .stat-item {
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+}
+    </style>
+    <div class="app-container">
+        <header>
+            <h1>Take Charge</h1>
+            <div class="date-picker">
+                <input type="date" id="journal-date" class="date-input">
+                <button id="today-btn" class="btn">Today</button>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="journal">Journal</button>
+            <button class="tab" data-tab="stats">Statistics</button>
+        </nav>
+
+        <main>
+            <div id="journal-tab" class="tab-content active">
+                <div class="editor-container">
+                    <textarea id="journal-entry" placeholder="Write your journal entry here..."></textarea>
+                    <div class="editor-footer">
+                        <div class="status-message" id="status-message"></div>
+                        <div class="autosave-toggle">
+                            <label for="autosave">Autosave:</label>
+                            <input type="checkbox" id="autosave" checked>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stats-tab" class="tab-content">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Journal Summary</h3>
+                        <div id="summary-stats"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Frequency</h3>
+                        <div id="frequency-stats"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Streaks</h3>
+                        <div id="streak-stats"></div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Activity Patterns</h3>
+                        <div id="pattern-stats"></div>
+                    </div>
+                    
+                    <div class="stat-card chart-container">
+                        <h3>Entries Per Month</h3>
+                        <div id="monthly-chart" class="chart"></div>
+                    </div>
+                    
+                    <div class="stat-card chart-container">
+                        <h3>Entries By Day of Week</h3>
+                        <div id="weekday-chart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const journalTextarea = document.getElementById('journal-entry');
+    const dateInput = document.getElementById('journal-date');
+    const todayBtn = document.getElementById('today-btn');
+    const statusMessage = document.getElementById('status-message');
+    const autosaveToggle = document.getElementById('autosave');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Statistics elements
+    const summaryStats = document.getElementById('summary-stats');
+    const frequencyStats = document.getElementById('frequency-stats');
+    const streakStats = document.getElementById('streak-stats');
+    const patternStats = document.getElementById('pattern-stats');
+    const monthlyChart = document.getElementById('monthly-chart');
+    const weekdayChart = document.getElementById('weekday-chart');
+    
+    // Initialize with today's date
+    const today = new Date();
+    const todayFormatted = formatDate(today);
+    dateInput.value = todayFormatted;
+    
+    // Check if localStorage is available
+    const isLocalStorageAvailable = checkLocalStorage();
+    
+    if (!isLocalStorageAvailable) {
+        disableEditing();
+        showStatus('LocalStorage is not available. Journal will not be saved.', 'error');
+        return;
+    }
+    
+    // Load today's entry
+    loadEntry(todayFormatted);
+    
+    // Event Listeners
+    dateInput.addEventListener('change', function() {
+        loadEntry(this.value);
+    });
+    
+    todayBtn.addEventListener('click', function() {
+        dateInput.value = todayFormatted;
+        loadEntry(todayFormatted);
+    });
+    
+    // Autosave functionality
+    let saveTimeout;
+    journalTextarea.addEventListener('input', function() {
+        if (autosaveToggle.checked) {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                saveEntry(dateInput.value, journalTextarea.value);
+            }, 1000);
+        }
+    });
+    
+    // Manual save on blur (for when autosave is off)
+    journalTextarea.addEventListener('blur', function() {
+        if (!autosaveToggle.checked) {
+            saveEntry(dateInput.value, journalTextarea.value);
+        }
+    });
+    
+    // Tab switching
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding content
+            tabContents.forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // If switching to stats tab, update statistics
+            if (tabId === 'stats') {
+                updateStatistics();
+            }
+        });
+    });
+    
+    // Functions
+    function checkLocalStorage() {
+        try {
+            const testKey = 'test';
+            localStorage.setItem(testKey, testKey);
+            localStorage.removeItem(testKey);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+    
+    function disableEditing() {
+        journalTextarea.disabled = true;
+        dateInput.disabled = true;
+        todayBtn.disabled = true;
+    }
+    
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    function parseDate(dateStr) {
+        const parts = dateStr.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    
+    function getAllEntries() {
+        try {
+            const entriesJson = localStorage.getItem('journalEntries');
+            return entriesJson ? JSON.parse(entriesJson) : {};
+        } catch (e) {
+            showStatus('Error loading journal entries', 'error');
+            return {};
+        }
+    }
+    
+    function loadEntry(date) {
+        const entries = getAllEntries();
+        const entry = entries[date] || '';
+        journalTextarea.value = entry;
+        
+        if (entry) {
+            showStatus(`Entry loaded for ${date}`, 'success');
+        } else {
+            showStatus(`No entry found for ${date}. Start writing!`, 'info');
+        }
+    }
+    
+    function saveEntry(date, content) {
+        try {
+            const entries = getAllEntries();
+            
+            if (content.trim()) {
+                entries[date] = content;
+            } else {
+                delete entries[date];
+            }
+            
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            showStatus(`Entry saved for ${date}`, 'success');
+            
+            // If we're on the stats page, update it
+            if (document.querySelector('.tab.active').getAttribute('data-tab') === 'stats') {
+                updateStatistics();
+            }
+        } catch (e) {
+            showStatus('Error saving entry. Storage might be full.', 'error');
+        }
+    }
+    
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = 'status-message show';
+        
+        // Set color based on type
+        if (type === 'success') {
+            statusMessage.style.color = 'var(--success-color)';
+        } else if (type === 'error') {
+            statusMessage.style.color = 'var(--danger-color)';
+        } else {
+            statusMessage.style.color = 'var(--primary-color)';
+        }
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            statusMessage.classList.remove('show');
+        }, 3000);
+    }
+    
+    function updateStatistics() {
+        const entries = getAllEntries();
+        const entryDates = Object.keys(entries).sort();
+        
+        if (entryDates.length === 0) {
+            summaryStats.innerHTML = '<p>No journal entries found.</p>';
+            frequencyStats.innerHTML = '<p>No data available.</p>';
+            streakStats.innerHTML = '<p>No data available.</p>';
+            patternStats.innerHTML = '<p>No data available.</p>';
+            return;
+        }
+        
+        // Summary Stats
+        updateSummaryStats(entryDates);
+        
+        // Frequency Stats
+        updateFrequencyStats(entryDates);
+        
+        // Streak Stats
+        updateStreakStats(entryDates);
+        
+        // Pattern Stats
+        updatePatternStats(entryDates);
+        
+        // Charts
+        updateMonthlyChart(entryDates);
+        updateWeekdayChart(entryDates);
+    }
+    
+    function updateSummaryStats(entryDates) {
+        const firstEntryDate = entryDates[0];
+        const lastEntryDate = entryDates[entryDates.length - 1];
+        
+        summaryStats.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-label">Total Entries:</span>
+                <span class="stat-value">${entryDates.length}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">First Entry:</span>
+                <span class="stat-value">${formatDisplayDate(firstEntryDate)}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Last Entry:</span>
+                <span class="stat-value">${formatDisplayDate(lastEntryDate)}</span>
+            </div>
+        `;
+    }
+    
+    function updateFrequencyStats(entryDates) {
+        const entriesByMonth = {};
+        const entriesByWeek = {};
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        
+        // Group by month
+        entryDates.forEach(date => {
+            const d = parseDate(date);
+            const monthYear = `${d.getFullYear()}-${d.getMonth() + 1}`;
+            entriesByMonth[monthYear] = (entriesByMonth[monthYear] || 0) + 1;
+        });
+        
+        // Calculate average per month
+        const monthCount = Object.keys(entriesByMonth).length;
+        const avgPerMonth = monthCount > 0 ? (entryDates.length / monthCount).toFixed(1) : 0;
+        
+        // Group by week (ISO week)
+        entryDates.forEach(date => {
+            const d = parseDate(date);
+            const week = getWeekNumber(d);
+            const weekYear = `${d.getFullYear()}-W${week}`;
+            entriesByWeek[weekYear] = (entriesByWeek[weekYear] || 0) + 1;
+        });
+        
+        // Calculate average per week
+        const weekCount = Object.keys(entriesByWeek).length;
+        const avgPerWeek = weekCount > 0 ? (entryDates.length / weekCount).toFixed(1) : 0;
+        
+        frequencyStats.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-label">Avg per Month:</span>
+                <span class="stat-value">${avgPerMonth}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Avg per Week:</span>
+                <span class="stat-value">${avgPerWeek}</span>
+            </div>
+        `;
+    }
+    
+    function updateStreakStats(entryDates) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const dates = entryDates.map(date => parseDate(date));
+        dates.sort((a, b) => a - b);
+        
+        let longestStreak = 0;
+        let currentStreak = 0;
+        let previousDate = null;
+        let streaks = [];
+        
+        for (let i = 0; i < dates.length; i++) {
+            const currentDate = dates[i];
+            
+            if (previousDate) {
+                const dayDiff = (currentDate - previousDate) / (1000 * 60 * 60 * 24);
+                
+                if (dayDiff === 1) {
+                    currentStreak++;
+                } else if (dayDiff > 1) {
+                    streaks.push(currentStreak + 1); // +1 to include the previous date
+                    currentStreak = 0;
+                }
+            }
+            
+            previousDate = currentDate;
+        }
+        
+        // Add the last streak
+        if (currentStreak > 0 || dates.length > 0) {
+            streaks.push(currentStreak + 1);
+        }
+        
+        longestStreak = streaks.length > 0 ? Math.max(...streaks) : 0;
+        
+        // Calculate current streak
+        const lastEntryDate = dates[dates.length - 1];
+        let activeStreak = 0;
+        
+        if (lastEntryDate) {
+            const daysSinceLastEntry = (today - lastEntryDate) / (1000 * 60 * 60 * 24);
+            
+            if (daysSinceLastEntry === 0) {
+                // Journaled today
+                activeStreak = streaks[streaks.length - 1];
+            } else if (daysSinceLastEntry === 1) {
+                // Journaled yesterday
+                activeStreak = streaks[streaks.length - 1];
+            }
+        }
+        
+        // Check inactivity
+        let inactivityWarning = '';
+        if (lastEntryDate) {
+            const daysSinceLastEntry = Math.floor((today - lastEntryDate) / (1000 * 60 * 60 * 24));
+            if (daysSinceLastEntry > 3) {
+                inactivityWarning = `
+                    <div class="inactivity-warning">
+                        You haven't journaled in ${daysSinceLastEntry} days.
+                    </div>
+                `;
+            }
+        }
+        
+        streakStats.innerHTML = `
+            <div class="streak-display">${longestStreak}</div>
+            <div class="streak-label">Longest Streak (days)</div>
+            
+            <div class="streak-display">${activeStreak}</div>
+            <div class="streak-label">Current Streak</div>
+            
+            ${inactivityWarning}
+        `;
+    }
+    
+    function updatePatternStats(entryDates) {
+        const dayCount = {
+            'Sunday': 0,
+            'Monday': 0,
+            'Tuesday': 0,
+            'Wednesday': 0,
+            'Thursday': 0,
+            'Friday': 0,
+            'Saturday': 0
+        };
+        
+        const timeCount = {
+            'Morning (5am-12pm)': 0,
+            'Afternoon (12pm-5pm)': 0,
+            'Evening (5pm-9pm)': 0,
+            'Night (9pm-5am)': 0
+        };
+        
+        // Since we don't track time, we'll just show day patterns
+        entryDates.forEach(date => {
+            const d = parseDate(date);
+            const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()];
+            dayCount[dayName]++;
+        });
+        
+        // Find most common day
+        let mostCommonDay = '';
+        let maxCount = 0;
+        
+        for (const day in dayCount) {
+            if (dayCount[day] > maxCount) {
+                maxCount = dayCount[day];
+                mostCommonDay = day;
+            }
+        }
+        
+        patternStats.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-label">Most Common Day:</span>
+                <span class="stat-value">${mostCommonDay}</span>
+            </div>
+        `;
+    }
+    
+    function updateMonthlyChart(entryDates) {
+        const monthlyData = {};
+        
+        entryDates.forEach(date => {
+            const d = parseDate(date);
+            const monthYear = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            monthlyData[monthYear] = (monthlyData[monthYear] || 0) + 1;
+        });
+        
+        const sortedMonths = Object.keys(monthlyData).sort();
+        const maxCount = Math.max(...Object.values(monthlyData), 0);
+        
+        let chartHTML = '';
+        sortedMonths.forEach(month => {
+            const count = monthlyData[month];
+            const widthPercent = maxCount > 0 ? (count / maxCount) * 100 : 0;
+            
+            chartHTML += `
+                <div>
+                    <div>${formatMonthYear(month)}</div>
+                    <div class="chart-bar" style="width: ${widthPercent}%">${count}</div>
+                </div>
+            `;
+        });
+        
+        monthlyChart.innerHTML = chartHTML || '<p>No data available for chart.</p>';
+    }
+    
+    function updateWeekdayChart(entryDates) {
+        const weekdayData = [0, 0, 0, 0, 0, 0, 0]; // Sun to Sat
+        
+        entryDates.forEach(date => {
+            const d = parseDate(date);
+            weekdayData[d.getDay()]++;
+        });
+        
+        const maxCount = Math.max(...weekdayData);
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        let chartHTML = '<div style="display: flex; height: 100%; align-items: flex-end; gap: 0.5rem;">';
+        
+        weekdayData.forEach((count, index) => {
+            const heightPercent = maxCount > 0 ? (count / maxCount) * 100 : 0;
+            
+            chartHTML += `
+                <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+                    <div class="chart-bar" style="height: ${heightPercent}%; width: 100%;">${count}</div>
+                    <div style="margin-top: 0.5rem;">${dayNames[index]}</div>
+                </div>
+            `;
+        });
+        
+        chartHTML += '</div>';
+        weekdayChart.innerHTML = chartHTML;
+    }
+    
+    // Helper functions
+    function formatDisplayDate(dateStr) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateStr).toLocaleDateString(undefined, options);
+    }
+    
+    function formatMonthYear(monthYear) {
+        const [year, month] = monthYear.split('-');
+        const date = new Date(year, month - 1);
+        return date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+    }
+    
+    function getWeekNumber(d) {
+        // Copy date so don't modify original
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        // Set to nearest Thursday: current date + 4 - current day number
+        // Make Sunday's day number 7
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        // Get first day of year
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        // Calculate full weeks to nearest Thursday
+        const weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1) / 7);
+        // Return array of year and week number
+        return weekNo;
+    }
+}); 
+    </script>
+</body>
+</html>

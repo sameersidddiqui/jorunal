@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// ✅ root check route
+app.get("/", (req, res) => {
+  res.send("✅ Journal Backend is running...");
+});
+
 // MongoDB Connection
 const uri = "mongodb+srv://2023bcs033:hJy5VViYhzJGjHCT@sameer.csbsaaf.mongodb.net/?retryWrites=true&w=majority&appName=Sameer";
 const client = new MongoClient(uri, {
